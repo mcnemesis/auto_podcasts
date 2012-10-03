@@ -21,18 +21,15 @@ echo "Assuming Latest Episode to be "$LATEST_EPISODE
 
 for i in $(seq 1 $LATEST_EPISODE)
 do
-    if [ $i -lt 10 ]
+    if [ -e "HardWithStyle_Episode$i.mp3" ]
     then
-        if [ -e "HardWithStyle_Episode$i.mp3" ]
+        #if the download still needs to continue...
+        if [ -e "HardWithStyle_Episode$i.mp3.st" ]
         then
-            #if the download still needs to continue...
-            if [ -e "HardWithStyle_Episode$i.mp3.st" ]
-            then
-                axel "http://soundcloud.com/hardwithstyle/episode-$i/download" -o "HardWithStyle_Episode$i.mp3"
-            fi
-            #no need to re-download -- already exists here
-            continue
+            axel "http://soundcloud.com/hardwithstyle/episode-$i/download" -o "HardWithStyle_Episode$i.mp3"
         fi
-        axel "http://soundcloud.com/hardwithstyle/episode-$i/download" -o "HardWithStyle_Episode$i.mp3"
+        #no need to re-download -- already exists here
+        continue
     fi
+    axel "http://soundcloud.com/hardwithstyle/episode-$i/download" -o "HardWithStyle_Episode$i.mp3"
 done
