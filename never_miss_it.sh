@@ -17,19 +17,34 @@
 #if invoker doesn't tell us which the latest episode is, assume the latest -- 15
 LATEST_EPISODE=$((${1:-15}))
 
+DOWNLOAD_URI="http://soundcloud.com/hardwithstyle/episode-!!/download"
+
 echo "Assuming Latest Episode to be "$LATEST_EPISODE
 
 for i in $(seq 1 $LATEST_EPISODE)
 do
+    down_uri=$DOWNLOAD_URI
+
+    if [ $i -eq 13 ]
+    then
+        down_uri="http://soundcloud.com/hardwithstyle/show-!!-headhunterz-hard-with/download"
+    fi
+
+    down_uri=${down_uri//\!\!/$i}
+
+
     if [ -e "HardWithStyle_Episode$i.mp3" ]
     then
         #if the download still needs to continue...
         if [ -e "HardWithStyle_Episode$i.mp3.st" ]
         then
-            axel "http://soundcloud.com/hardwithstyle/episode-$i/download" -o "HardWithStyle_Episode$i.mp3"
+            echo "Fetching Episode "$i" from : "$down_uri
+            axel $down_uri -o "HardWithStyle_Episode$i.mp3"
         fi
         #no need to re-download -- already exists here
         continue
     fi
-    axel "http://soundcloud.com/hardwithstyle/episode-$i/download" -o "HardWithStyle_Episode$i.mp3"
+
+    echo "Fetching Episode "$i" from : "$down_uri
+    axel $down_uri -o "HardWithStyle_Episode$i.mp3"
 done
